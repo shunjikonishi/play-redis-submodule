@@ -17,7 +17,7 @@ import akka.actor.PoisonPill
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
 class RedisService(redisUrl: String) {
-  private val (host, port, pool) = {
+  private val (host, port, secret, pool) = {
     val uri = new java.net.URI(redisUrl)
     val host = uri.getHost
     val port = uri.getPort
@@ -27,7 +27,13 @@ class RedisService(redisUrl: String) {
     }
     val pool = new RedisClientPool(host, port, secret=secret)
     Logger.info(s"Redis host: $host, Redis port: $port")
-    (host, port, pool)
+    (host, port, secret, pool)
+  }
+  
+  def createClient = {
+    val client = new RedisClient(host, port)
+    secret.foreach(client.auth(_))
+    client
   }
   
   def withClient[T](body: RedisClient => T) = pool.withClient(body)
