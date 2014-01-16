@@ -37,8 +37,6 @@ class RedisService(redisUrl: String) {
   }
   
   def withClient[T](body: RedisClient => T) = pool.withClient(body)
-  def borrowClient = pool.pool.borrowObject
-  def returnClient(client: RedisClient) = pool.pool.returnObject(client)
   
   def close = pool.close
   
@@ -80,13 +78,10 @@ class PubSubChannel(redis: RedisService, channel: String,
   unsubscribe: Option[(String, Int) => Unit] = None
   ) {
   
-  @volatile
-  private var unsubscribed = false
-  
   private val (msgEnumerator, msgChannel) = Concurrent.broadcast[String]
   private val pub = Akka.system.actorOf(Props(new Publisher(redis)))
   private val sub = {
-    val client = redis.borrowClient
+    val client = redis.createClient
     client.subscribe(channel)(callback)
     client
   }
@@ -112,12 +107,8 @@ class PubSubChannel(redis: RedisService, channel: String,
     case U(channel, no) => 
       unsubscribe.foreach(_(channel, no))
       if (no == 0) {
-        sub.pubSub = false
+        sub.disconnect
       }
-      if (!unsubscribed) {
-        unsubscribed = true
-        redis.returnClient(sub)
-      }  
     case M(channel, msg) => 
       Logger.debug("receive: " + msg)
       val str = receive.map(_(msg)).getOrElse(msg)
@@ -136,9 +127,7 @@ class PubSubChannel(redis: RedisService, channel: String,
   
   def close = {
     Logger.info("close: " + channel)
-    if (!unsubscribed) {
-      sub.unsubscribe
-    }
+    sub.unsubscribe
     pub ! PoisonPill
   }
   
