@@ -85,6 +85,7 @@ class PubSubChannel(redis: RedisService, channel: String,
     client.subscribe(channel)(callback)
     client
   }
+  Logger.info("open: " + channel)
   
   lazy val in = Iteratee.foreach[String] { msg =>
     val str = send.map(_(msg)).getOrElse(msg)
