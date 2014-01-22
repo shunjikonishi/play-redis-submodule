@@ -1,5 +1,5 @@
 # play-redis-submodule
-This is a submodule for playframework 2.x.
+This is a submodule for playframework 2.x.  
 You can easily make scalabe webscoke app with this module
 
 ## Install
@@ -9,7 +9,7 @@ Command:
     cd myapp
     git submodule add git@github.com:shunjikonishi/play-redis-submodule.git app/redis
 
-build.sbt: Add following dependency
+build.sbt:
 
     libraryDependencies ++= Seq(
       "net.debasishg" % "redisclient_2.10" % "2.11"
