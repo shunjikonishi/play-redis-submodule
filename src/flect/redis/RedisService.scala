@@ -43,6 +43,7 @@ class RedisService(redisUrl: String) {
     } catch {
       case e: Exception =>
         if (secret.isDefined) {
+          Logger.info("Retry auth of redis")
           secret.foreach(client.auth(_))
           body(client)
         } else {
