@@ -36,7 +36,22 @@ class RedisService(redisUrl: String) {
     client
   }
   
-  def withClient[T](body: RedisClient => T) = pool.withClient(body)
+  def withClient[T](body: RedisClient => T) = {
+    val client = pool.pool.borrowObject
+    try {
+      body(client)
+    } catch {
+      case e: Exception =>
+        if (secret.isDefined) {
+          secret.foreach(client.auth(_))
+          body(client)
+        } else {
+          throw e
+        }
+    } finally {
+      pool.pool.returnObject(client)
+    }
+  }
   
   def close = pool.close
   
