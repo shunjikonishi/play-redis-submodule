@@ -39,6 +39,10 @@ class RedisService(redisUrl: String) {
   def withClient[T](body: RedisClient => T) = {
     val client = pool.pool.borrowObject
     try {
+      if (!client.connected && secret.isDefined) {
+        Logger.info("Redis disconnected. Auth again.")
+        secret.foreach(client.auth(_))
+      }
       body(client)
     } catch {
       case e: Exception =>
