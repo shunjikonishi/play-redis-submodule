@@ -56,6 +56,7 @@ class PubSubChannel(redis: RedisService, channel: String,
   }
   
   lazy val out = msgEnumerator
+  lazy val outChannel = msgChannel
   
   private def callback(pubsub: PubSubMessage): Unit = pubsub match {
     case E(ex) => 
