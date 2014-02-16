@@ -7,7 +7,7 @@ Command:
 
     play new myapp
     cd myapp
-    git submodule add git@github.com:shunjikonishi/play-redis-submodule.git app/redis
+    git submodule add https://github.com/shunjikonishi/play-redis-submodule.git app/redis
 
 build.sbt:
 
