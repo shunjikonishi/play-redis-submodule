@@ -1,6 +1,6 @@
 # play-redis-submodule
 This is a submodule for playframework 2.x.  
-You can easily make scalabe webscoke app with this module
+You can easily make scalabe websocket app with this module
 
 ## Install
 Command:
