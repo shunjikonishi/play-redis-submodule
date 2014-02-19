@@ -4,23 +4,8 @@ import play.api.Logger
 import com.redis.RedisClient
 import com.redis.RedisClientPool
 import java.net.URI
-/*
-import java.io.OutputStream
-import com.redis.{ PubSubMessage, S, U, M, E}
-import play.api.Play
-import play.api.Play.current
-import play.api.Logger
-import play.api.libs.iteratee.Iteratee
-import play.api.libs.iteratee.Concurrent
-import play.api.libs.concurrent.Akka
-import akka.actor.Props
-import akka.actor.Actor
-import akka.actor.PoisonPill
-import play.api.libs.concurrent.Execution.Implicits.defaultContext
-*/
 
-
-class RedisService(redisUrl: String) {
+class RedisService(redisUrl: String) extends Operations {
   private val (host, port, secret, pool) = {
     val uri = new URI(redisUrl)
     val host = uri.getHost
