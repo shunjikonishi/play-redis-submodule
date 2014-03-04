@@ -56,18 +56,15 @@ class Room(name: String, redis: RedisService) {
           h.onDisconnect.foreach(_())
           self ! RoomDisconnect
         }
-        /*
         val out = h.onRedisMsg.map { onRedisMsg =>
           val (e, c) = Concurrent.broadcast[String]
           val i = Iteratee.foreach[String] { redisMsg =>
             val clientMsg = onRedisMsg(redisMsg)
             clientMsg.foreach(c.push(_))
           }
-          e.apply(i)
+          channel.out(i)
           e
         }.getOrElse(channel.out)
-        */
-        val out = channel.out
         sender ! (in, out)
       case RoomDisconnect =>
         if (isActive && connectCount > 0) {
