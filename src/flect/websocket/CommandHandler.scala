@@ -46,6 +46,12 @@ trait CommandHandler {
   def handle(command: Command): CommandResponse
 }
 
+object CommandHandler {
+  def apply(func: (Command) => CommandResponse) = new CommandHandler {
+    def handle(command: Command): CommandResponse = func(command)
+  }
+}
+
 class CommandInvoker {
 
   private var handlers = Map.empty[String, (Command) => Option[CommandResponse]]
@@ -65,7 +71,13 @@ class CommandInvoker {
     Logger.info(log)
 
     val handler: (Command) => Option[CommandResponse] = handlers.get(command.name).getOrElse(defaultHandler)
-    handler(command)
+    try {
+      handler(command)
+    } catch {
+      case e: Exception =>
+        e.printStackTrace();
+        Some(command.error(e.toString))
+    }
   }
 
   def addHandler(command: String)(handler: (Command) => Option[CommandResponse]): Unit = {
