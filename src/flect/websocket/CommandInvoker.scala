@@ -24,7 +24,7 @@ class CommandInvoker {
   val (out, channel) = Concurrent.broadcast[String]
   val in = Iteratee.foreach[String] { msg =>
     val command = Command.fromJson(msg)
-    handle(command).foreach(res => channel.push(res.toJson))
+    handle(command).foreach(res => channel.push(res.toString))
   }.map(_ => onDisconnect)
 
   def handle(command: Command): Option[CommandResponse] = {

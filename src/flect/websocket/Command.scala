@@ -14,10 +14,10 @@ case class Command(id: Long, name: String, log: Option[String], data: JsValue) {
       "command" -> JsString(name),
       "log" -> log.map(JsString(_)).getOrElse(JsNull),
       "data" -> data
-    ).filter(t => t._2 != JsNull)).toString
+    ).filter(t => t._2 != JsNull))
   }
 
-  override def toString = toJson
+  override def toString = toJson.toString
 }
 
 object Command {
@@ -45,10 +45,10 @@ case class CommandResponse(id: Option[Long], name: String, contentType: String, 
       "command" -> JsString(name),
       "type" -> JsString(contentType),
       "data" -> data
-    ).filter(t => t._2 != JsNull)).toString
+    ).filter(t => t._2 != JsNull))
   }
 
-  override def toString = toJson
+  override def toString = toJson.toString
 }
 
 object CommandResponse {
