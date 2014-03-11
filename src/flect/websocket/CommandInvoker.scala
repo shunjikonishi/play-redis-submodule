@@ -35,6 +35,7 @@ class CommandInvoker {
       handler(command)
     } catch {
       case e: Exception =>
+        Logger.error(command.toString)
         Logger.error(e.getMessage, e)
         Some(command.error(e.toString))
     }
