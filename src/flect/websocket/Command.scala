@@ -36,7 +36,7 @@ object Command {
 }
 
 case class CommandResponse(id: Option[Long], name: String, contentType: String, data: JsValue) {
-  def this(name: String, contentType: String, data: JsValue) = this(None, name, contentType, data)
+  def this(name: String, data: JsValue) = this(None, name, "json", data)
   def this(name: String, data: String) = this(None, name, "text", JsString(data))
 
   def toJson = {
