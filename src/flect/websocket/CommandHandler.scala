@@ -1,6 +1,7 @@
 package flect.websocket
 
 trait CommandHandler {
+  def apply(command: Command) = handle(command)
   def handle(command: Command): CommandResponse
 }
 
