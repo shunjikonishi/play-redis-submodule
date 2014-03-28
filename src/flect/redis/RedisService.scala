@@ -48,6 +48,7 @@ class RedisService(redisUrl: String) extends Operations {
   }
   
   def close = pool.close
+  def clear = pool.pool.clear
   
   def createPubSub(channel: String,
     send: String => String = null,
