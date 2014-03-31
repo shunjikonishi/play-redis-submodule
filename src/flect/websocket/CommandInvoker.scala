@@ -25,10 +25,15 @@ class CommandInvoker extends CommandHandler {
 
   val (out, channel) = Concurrent.broadcast[String]
   val in = Iteratee.foreach[String] { msg =>
-    val command = Command.fromJson(msg)
-    val res = handle(command)
-    if (!res.isNone) {
-      channel.push(res.toString)
+    try {
+      val command = Command.fromJson(msg)
+      val res = handle(command)
+      if (!res.isNone) {
+        channel.push(res.toString)
+      }
+    } catch {
+      case e: Exception =>
+        e.printStackTrace
     }
   }.map(_ => onDisconnect)
 
