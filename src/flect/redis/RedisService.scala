@@ -14,7 +14,7 @@ class RedisService(redisUrl: String, maxIdle: Int = 8, maxActive: Int = 0) exten
       case _ => None
     }
     val pool = new RedisClientPoolEx(host, port, secret=secret, maxIdle=maxIdle, maxActive=maxActive)
-    Logger.info(s"Redis host: $host, Redis port: $port")
+    Logger.info(s"Redis host: $host, Redis port: $port, maxIdle: $maxIdle, maxActive: $maxActive")
     (host, port, secret, pool)
   }
   
