@@ -2,10 +2,9 @@ package flect.redis
 
 import play.api.Logger
 import com.redis.RedisClient
-import com.redis.RedisClientPool
 import java.net.URI
 
-class RedisService(redisUrl: String) extends Operations {
+class RedisService(redisUrl: String, maxIdle: Int = 8, maxActive: Int = 0) extends Operations {
   private val (host, port, secret, pool) = {
     val uri = new URI(redisUrl)
     val host = uri.getHost
@@ -14,7 +13,7 @@ class RedisService(redisUrl: String) extends Operations {
       case username :: password :: Nil => Some(password)
       case _ => None
     }
-    val pool = new RedisClientPool(host, port, secret=secret)
+    val pool = new RedisClientPoolEx(host, port, secret=secret, maxIdle=maxIdle, maxActive=maxActive)
     Logger.info(s"Redis host: $host, Redis port: $port")
     (host, port, secret, pool)
   }
@@ -76,6 +75,6 @@ class RedisService(redisUrl: String) extends Operations {
 }
 
 object RedisService {
-  def apply(uri: String) = new RedisService(uri)
+  def apply(uri: String, maxIdle: Int = 8, maxActive: Int = 0) = new RedisService(uri, maxIdle, maxActive)
 }
 
