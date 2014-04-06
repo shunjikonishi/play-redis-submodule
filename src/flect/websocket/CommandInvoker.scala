@@ -5,6 +5,7 @@ import play.api.libs.json._
 import play.api.libs.iteratee.Iteratee
 import play.api.libs.iteratee.Concurrent
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
+import java.nio.channels.ClosedChannelException
 
 class CommandInvoker extends CommandHandler {
 
@@ -32,6 +33,7 @@ class CommandInvoker extends CommandHandler {
         channel.push(res.toString)
       }
     } catch {
+      case e: ClosedChannelException => //Ignore
       case e: Exception =>
         e.printStackTrace
     }
