@@ -79,6 +79,7 @@ class PubSubChannel(redis: RedisService, channel: String,
   }
   
   def send(channel: String, msg: String): Unit = {
+    Logger.info("!!!! test !!!! " + Logger.isDebugEnabled)
     Logger.debug("send message to redis: " + channel + ", " + msg)
     pub ! Publish(channel, msg)
   }
