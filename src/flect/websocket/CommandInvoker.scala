@@ -19,7 +19,7 @@ class CommandInvoker extends CommandHandler {
 
   protected def log(msg: String, res: CommandResponse, time: Long): Unit = {
     val status = if (res.isError) "NG" else "OK"
-    Logger.info(s"command: ${msg}, status: ${status}, time=${time}ms")
+    Logger.info(s"${msg}, status: ${status}, time=${time}ms")
   }
 
   protected def onDisconnect: Unit = {}
@@ -41,7 +41,7 @@ class CommandInvoker extends CommandHandler {
 
   def handle(command: Command): CommandResponse = {
     val start = System.currentTimeMillis
-    val logMsg = command.name + command.log.map("(" + _ + ")").getOrElse("")
+    val logMsg = s"command: " + command.name + command.log.map("(" + _ + ")").getOrElse("") + ", seq=" + command.id
     val handler = handlers.get(command.name).getOrElse(defaultHandler)
     val ret = try {
       handler(command)
