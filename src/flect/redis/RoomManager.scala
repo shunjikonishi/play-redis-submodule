@@ -52,7 +52,7 @@ abstract class RoomManager[T <: Room](redis: RedisService) {
     (in, out)
   }
   
-  implicit val timeout = Timeout(5 seconds)
+  implicit val timeout = Timeout(50 seconds)
   
   private val actor = Akka.system.actorOf(Props(new MyActor()))
   
